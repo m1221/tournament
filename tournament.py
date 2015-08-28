@@ -77,26 +77,48 @@ def playerStandings():
     
 
 
-def reportMatch(winner, loser):
+def reportMatch(winner, loser, draw):
     """Records the outcome of a single match between two players.
 
     Args:
       winner:  the id number of the player who won
       loser:  the id number of the player who lost
+      draw: boolean value, True if there was a draws
     """
-    conn = connect()
-    c = conn.cursor()
-    c.execute("INSERT INTO Matches (match_victor, match_loser) VALUES (%s, %s)", (winner, loser))
-    c.execute('''
-    update players set (wins, matches) = (wins+1, matches+1)
-      where player_id = %s
-    ''' , (winner,))
-    c.execute('''
-    update players set (matches) = (matches+1)
-      where player_id = %s
-    ''' , (loser,))
-    conn.commit()
-    conn.close()
+    if draw == False:
+      conn = connect()
+      c = conn.cursor()
+      c.execute('''
+      INSERT INTO Matches (match_victor, participant_1, participant_2) VALUES (%s, %s, %s)
+      ''', (winner, winner, loser))
+      c.execute('''
+      update Players set (wins, matches) = (wins+1, matches+1)
+        where Player_id = %s
+      ''' , (winner,))
+      c.execute('''
+      update Players set (matches) = (matches+1)
+        where player_id = %s
+      ''' , (loser,))
+      conn.commit()
+      conn.close()
+    elif draw == True:
+      conn = connect()
+      c = conn.cursor()
+      c.execute('''
+      INSERT INTO Matches (match_victor, participant_1, participant_2) VALUES (null, %s, %s)
+      ''', (winner, loser))
+      c.execute('''
+      update Players set (matches) = (matches + 1)
+        where player_id = %s
+      ''' , (winner,))
+      c.execute('''
+      update Players set (matches) = (matches +1)
+        where player_id = %s
+      ''' , (loser,))
+      conn.commit()
+      conn.close()
+    else:
+      raise TypeError("Please enter a boolean for arg 'draw.'")
  
  
 def swissPairings():

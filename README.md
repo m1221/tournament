@@ -22,4 +22,5 @@ Instructions for running:
 6. Quit by entering \q
 7. To test the database, $ python tournament_test.py
 
-This code doesn't have any of the extra credit functionalities.
+This code has the following extra credit functionality:
+1. players can draw

@@ -22,10 +22,12 @@ CREATE TABLE Players (
 CREATE TABLE Matches (
   match_id serial PRIMARY KEY,
   match_victor int REFERENCES Players(player_id),
-  match_loser int REFERENCES Players(player_id)
+  participant_1 int REFERENCES Players(player_id),
+  participant_2 int REFERENCES Players(player_id)
 );
 
 -- VIEWS --
+-- These views are used for swissPairings() in tournament.py
 CREATE VIEW vRank as
   SELECT player_id, player_name,
     ROW_NUMBER() OVER(ORDER BY wins) AS ranking
