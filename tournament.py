@@ -27,6 +27,11 @@ def deletePlayers():
     c.execute("DELETE FROM Players;")
     conn.commit()
     conn.close()
+    
+  # deleteTournament
+  # deleteAllTournaments
+  # createTournament
+  #what else?
 
 
 def countPlayers():
@@ -39,7 +44,7 @@ def countPlayers():
     return count
 
 
-def registerPlayer(name):
+def registerPlayer(name): #make tournament id an argument? should tournament id be INT, not serial?
     """Adds a player to the tournament database.
   
     The database assigns a unique serial id number for the player.  (This

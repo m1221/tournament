@@ -12,7 +12,15 @@ CREATE DATABASE tournament;
 \c tournament;
 
 -- TABLES --
+CREATE TABLE Tournaments (
+  tournament_id serial PRIMARY KEY,
+  tournament_name text,
+  tournament_start date,
+  tournament_end date
+);
+
 CREATE TABLE Players (
+  tournament_id int REFERENCES Tournaments(tournament_id),
   player_id serial PRIMARY KEY,
   player_name text,
   wins int,

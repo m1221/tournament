@@ -67,9 +67,9 @@ def testStandingsBeforeMatches():
                          "they have played any matches.")
     elif len(standings) > 2:
         raise ValueError("Only registered players should appear in standings.")
-    if len(standings[0]) != 4:
-        raise ValueError("Each playerStandings row should have four columns.")
-    [(id1, name1, wins1, matches1), (id2, name2, wins2, matches2)] = standings
+    if len(standings[0]) != 5:
+        raise ValueError("Each playerStandings row should have five columns.")
+    [(tid, id1, name1, wins1, matches1), (tid, id2, name2, wins2, matches2)] = standings
     if matches1 != 0 or matches2 != 0 or wins1 != 0 or wins2 != 0:
         raise ValueError(
             "Newly registered players should have no matches or wins.")
@@ -87,11 +87,11 @@ def testReportMatches():
     registerPlayer("Cathy Burton")
     registerPlayer("Diane Grant")
     standings = playerStandings()
-    [id1, id2, id3, id4] = [row[0] for row in standings]
+    [id1, id2, id3, id4] = [row[1] for row in standings]
     reportMatch(id1, id2, False)
     reportMatch(id3, id4, False)
     standings = playerStandings()
-    for (i, n, w, m) in standings:
+    for (id, i, n, w, m) in standings:
         if m != 1:
             raise ValueError("Each player should have one match recorded.")
         if i in (id1, id3) and w != 1:
@@ -109,7 +109,7 @@ def testPairings():
     registerPlayer("Applejack")
     registerPlayer("Pinkie Pie")
     standings = playerStandings()
-    [id1, id2, id3, id4] = [row[0] for row in standings]
+    [id1, id2, id3, id4] = [row[1] for row in standings]
     reportMatch(id1, id2, False)
     reportMatch(id3, id4, False)
     pairings = swissPairings()
