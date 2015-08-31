@@ -10,6 +10,16 @@ def connect():
     """Connect to the PostgreSQL database.  Returns a database connection."""
     return psycopg2.connect("dbname=tournament")
     
+def findTournamentID():
+    """This function was designed for tournament_test.py. It finds the id of the test tournament"""
+    conn = connect()
+    c = conn.cursor()
+    c.execute("SELECT tournament_id FROM Tournaments WHERE tournament_name = 'wowsers';")
+    t_id = c.fetchone()[0]
+    conn.commit()
+    conn.close()
+    return t_id
+    
     
 def deleteMatches():
     """Remove all the match records from the database."""
@@ -28,34 +38,64 @@ def deletePlayers():
     conn.commit()
     conn.close()
     
-  # deleteTournament
-  # deleteAllTournaments
-  # createTournament
-  #what else?
+def deleteTournament(t_id):
+    """Remove selected tournament from database"""
+    conn = connect()
+    c = conn.cursor()
+    c.execute("DELETE FROM Matches WHERE tournament_id = (%s);", (t_id,))
+    c.execute("DELETE FROM Players WHERE tournament_id = (%s);", (t_id,))
+    c.execute("DELETE FROM Tournament WHERE tournament_id = (%s);", (t_id,))
+    conn.commit()
+    conn.close()
+    
+def deleteAllTournaments():
+    """Remove all tournaments from database"""
+    conn = connect()
+    c = conn.cursor()
+    c.execute("DELETE FROM Matches;")
+    c.execute("DELETE FROM Players;")
+    c.execute("DELETE FROM Tournaments;")
+    conn.commit()
+    conn.close()
+
+
+def createTournament(t_name, start, end):
+    """Create a tournament"""
+    conn = connect()
+    c = conn.cursor()
+    c.execute('''
+    INSERT INTO Tournaments (tournament_name, tournament_start, tournament_end) VALUES 
+    (%s, %s, %s)
+    ''', (t_name, start, end))
+    conn.commit()
+    conn.close()
 
 
 def countPlayers():
     """Returns the number of players currently registered."""
     conn = connect()
     c = conn.cursor()
-    c.execute("SELECT COUNT(*) AS num_players FROM Players;")
+    c.execute("SELECT COUNT(*) FROM Players;")
     count = c.fetchone()[0]
     conn.close()
     return count
 
 
-def registerPlayer(name): #make tournament id an argument? should tournament id be INT, not serial?
+def registerPlayer(t_id, name):
     """Adds a player to the tournament database.
   
     The database assigns a unique serial id number for the player.  (This
     should be handled by your SQL database schema, not in your Python code.)
   
     Args:
+      t_id: tournament in which to register player.
       name: the player's full name (need not be unique).
     """
+    # check if t_id exists, if it doesn't exist raise error, if it does exist do insert
+    # problem is that I don't know the sql to do IF statements. hm. i could do it in python!
     conn = connect()
     c = conn.cursor()
-    c.execute("INSERT INTO Players (player_name, wins, matches) VALUES (%s, 0, 0)", (name,))
+    c.execute("INSERT INTO Players (tournament_id, player_name, wins, matches) VALUES (%s, %s, 0, 0)", (t_id, name))
     conn.commit()
     conn.close()
 

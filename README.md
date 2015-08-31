@@ -24,3 +24,4 @@ Instructions for running:
 
 This code has the following extra credit functionality:
 1. players can draw
+2. database schema supports multiple tournaments

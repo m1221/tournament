@@ -30,7 +30,7 @@ def testCount():
 def testRegister():
     deleteMatches()
     deletePlayers()
-    registerPlayer("Chandra Nalaar")
+    registerPlayer(tourn_id, "Chandra Nalaar")
     c = countPlayers()
     if c != 1:
         raise ValueError(
@@ -41,10 +41,10 @@ def testRegister():
 def testRegisterCountDelete():
     deleteMatches()
     deletePlayers()
-    registerPlayer("Markov Chaney")
-    registerPlayer("Joe Malik")
-    registerPlayer("Mao Tsu-hsi")
-    registerPlayer("Atlanta Hope")
+    registerPlayer(tourn_id, "Markov Chaney")
+    registerPlayer(tourn_id, "Joe Malik")
+    registerPlayer(tourn_id, "Mao Tsu-hsi")
+    registerPlayer(tourn_id, "Atlanta Hope")
     c = countPlayers()
     if c != 4:
         raise ValueError(
@@ -59,8 +59,8 @@ def testRegisterCountDelete():
 def testStandingsBeforeMatches():
     deleteMatches()
     deletePlayers()
-    registerPlayer("Melpomene Murray")
-    registerPlayer("Randy Schwartz")
+    registerPlayer(tourn_id, "Melpomene Murray")
+    registerPlayer(tourn_id, "Randy Schwartz")
     standings = playerStandings()
     if len(standings) < 2:
         raise ValueError("Players should appear in playerStandings even before "
@@ -82,10 +82,10 @@ def testStandingsBeforeMatches():
 def testReportMatches():
     deleteMatches()
     deletePlayers()
-    registerPlayer("Bruno Walton")
-    registerPlayer("Boots O'Neal")
-    registerPlayer("Cathy Burton")
-    registerPlayer("Diane Grant")
+    registerPlayer(tourn_id, "Bruno Walton")
+    registerPlayer(tourn_id, "Boots O'Neal")
+    registerPlayer(tourn_id, "Cathy Burton")
+    registerPlayer(tourn_id, "Diane Grant")
     standings = playerStandings()
     [id1, id2, id3, id4] = [row[1] for row in standings]
     reportMatch(id1, id2, False)
@@ -104,10 +104,10 @@ def testReportMatches():
 def testPairings():
     deleteMatches()
     deletePlayers()
-    registerPlayer("Twilight Sparkle")
-    registerPlayer("Fluttershy")
-    registerPlayer("Applejack")
-    registerPlayer("Pinkie Pie")
+    registerPlayer(tourn_id, "Twilight Sparkle")
+    registerPlayer(tourn_id, "Fluttershy")
+    registerPlayer(tourn_id, "Applejack")
+    registerPlayer(tourn_id, "Pinkie Pie")
     standings = playerStandings()
     [id1, id2, id3, id4] = [row[1] for row in standings]
     reportMatch(id1, id2, False)
@@ -126,6 +126,9 @@ def testPairings():
 
 
 if __name__ == '__main__':
+    deleteAllTournaments()
+    createTournament('wowsers', '2015-12-01', '2015-12-31')
+    tourn_id = findTournamentID()
     testDeleteMatches()
     testDelete()
     testCount()
